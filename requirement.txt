@@ -1,0 +1,7 @@
+asgiref==3.8.1
+Django==5.2
+django-allauth==65.7.0
+django-cleanup==9.0.0
+django-htmx==1.23.0
+pillow==11.2.1
+sqlparse==0.5.3
