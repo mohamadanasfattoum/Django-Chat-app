@@ -14,7 +14,10 @@
                 {% if user.email %}{{ user.email }}{% else %}No Email{% endif %}
             </td>
             <td class="pt-4 pb-1 px-6">
-                <a id="email-edit" href="" class="font-medium text-blue-600 hover:underline">
+                <a id="email-edit" class="cursor-pointer font-medium text-blue-600 hover:underline"
+                    hx-get="{% url 'profile-emailchange' %}"
+                    hx-target="#email-address"
+                    hx-swap="innerHTML" >
                     Edit
                 </a>
             </td>
@@ -29,7 +32,7 @@
                 {% endif %}
             </td>
             <td class="px-6 pb-4">
-                <a href="" class="font-medium text-blue-600 hover:underline">
+                <a href="{% url 'profile-emailverify' %}" class="font-medium text-blue-600 hover:underline">
                     {% if not user.emailaddress_set.first.verified %}Verify{% endif %}
                 </a>
             </td>
