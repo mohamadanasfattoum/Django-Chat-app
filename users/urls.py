@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import profile, edit_profile, profile_settings, profile_emailchange, profile_emailverify
+from .views import profile, edit_profile, profile_settings, profile_emailchange, profile_emailverify, profile_delete
 
 urlpatterns = [
     path('', profile, name='profile'),
@@ -9,5 +9,6 @@ urlpatterns = [
     path('settings/', profile_settings, name='profile-settings'),
     path('emailchange/', profile_emailchange, name='profile-emailchange'),
     path('emailverify/', profile_emailverify, name='profile-emailverify'),
+    path('delete/', profile_delete, name='profile-delete'),
 
 ]
