@@ -35,3 +35,8 @@ def edit_profile(request):
 
     return render(request, 'users/edit_profile.html', {'form': form, 'onboarding': onboarding})
  
+
+
+@login_required
+def profile_settings(request):
+    return render(request, 'users/profile_settings.html')
