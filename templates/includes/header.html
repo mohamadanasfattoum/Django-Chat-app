@@ -32,7 +32,7 @@
             
             {% else %}
     <li><a href="{% url 'account_login' %}">Login</a></li>
-            <li><a href="">Signup</a></li>
+            <li><a href="{% url 'account_signup' %}?next={% url 'profile-onboarding' %}">Signup</a></li>
             {% endif %}
         </ul>
     </nav>

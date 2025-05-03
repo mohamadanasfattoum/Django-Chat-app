@@ -2,7 +2,12 @@
 
 {% block content %}
 
+{% if onboarding %}
+<h1 class="mb-4">Complete your Profile</h1>
+{% else %}
 <h1 class="mb-4">Edit your Profile</h1>
+
+{% endif %}
 
 <div class="text-center flex flex-col items-center">
     <img id="avatar" class="w-36 h-36 rounded-full object-cover my-4" src="{{ user.profile.avatar }}" />
@@ -15,7 +20,13 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" >Submit</button>
+
+    {% if onboarding %}
+    <a class="button button-gray ml-1" href="{% url 'home' %}">Skip</a>
+    {% else %}
     <a class="button button-gray ml-1" href="{{ request.META.HTTP_REFERER }}">Cancel</a>
+
+    {% endif %}
 </form>
 
 

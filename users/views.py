@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .form import ProfileForm
+
 
 
 # Create your views here.
@@ -17,6 +19,11 @@ def edit_profile(request):
         if form.is_valid():
             form.save()
             return redirect('profile')
+        
+    if request.path == reverse('profile-onboarding'):
+        onboarding = True
+    else:
+        onboarding = False
 
-    return render(request, 'users/edit_profile.html', {'form': form})
+    return render(request, 'users/edit_profile.html', {'form': form, 'onboarding': onboarding})
  
