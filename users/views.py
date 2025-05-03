@@ -1,4 +1,5 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .form import ProfileForm
@@ -6,8 +7,15 @@ from .form import ProfileForm
 
 
 # Create your views here.
-def profile(request):
-    profile = request.user.profile
+def profile(request, username=None):
+    if username:
+        profile = get_object_or_404(User, username=username).profile
+    else:
+        try:
+            profile = request.user.profile
+        except:
+            return redirect('account_login')  
+                 
     return render(request, 'users/profile.html',{'profile': profile})
 
 @login_required
