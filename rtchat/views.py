@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import ChatGroup
 from django.contrib.auth.decorators import login_required
+from .forms import ChatmessageCreateForm
 
 
 
@@ -8,9 +9,20 @@ from django.contrib.auth.decorators import login_required
 def chat_view(request):
     chat_group = get_object_or_404(ChatGroup, group_name = 'public-chat')  # Get the chat group
     chat_messages = chat_group.chat_messages.all()[:30]  # Get all messages for the group, chat_messages is a related name for the GroupMessages model and ChatGroup model to get all messages related to the group
+    form = ChatmessageCreateForm()  # Create a form instance for sending messages
+    
+    if request.method == 'POST':
+        form = ChatmessageCreateForm(request.POST)
+        if form.is_valid:
+            message = form.save(commit=False) # Create a new message instance but don't save it to the database yet
+            # Set the group and author fields before saving
+            message.author = request.user
+            message.group = chat_group
+            message.save()
+            return redirect('home')  # Redirect to the same page after sending a message
     return render(request, 'rtchat/chat.html', {
-        'chat_group': chat_group,
         'chat_messages': chat_messages,
+        'form': form,
     })
 # The chat_view function is a Django view that handles the chat functionality. It retrieves the chat group and its messages, and renders them in the 'chat.html' template.
 # The @login_required decorator ensures that only authenticated users can access the chat view. If a user is not logged in, they will be redirected to the login page.
