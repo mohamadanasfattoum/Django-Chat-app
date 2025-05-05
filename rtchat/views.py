@@ -11,7 +11,7 @@ def chat_view(request):
     chat_messages = chat_group.chat_messages.all()[:30]  # Get all messages for the group, chat_messages is a related name for the GroupMessages model and ChatGroup model to get all messages related to the group
     form = ChatmessageCreateForm()  # Create a form instance for sending messages
     
-    if request.method == 'POST':
+    if request.htmx:
         form = ChatmessageCreateForm(request.POST)
         if form.is_valid:
             message = form.save(commit=False) # Create a new message instance but don't save it to the database yet
@@ -19,7 +19,11 @@ def chat_view(request):
             message.author = request.user
             message.group = chat_group
             message.save()
-            return redirect('home')  # Redirect to the same page after sending a message
+            context = {
+                'message' : message,
+                'user' : request.user,  
+            }
+            return render(request, 'rtchat/partials/chat_message_p.html', context)  # Redirect to the same page after sending a message
     return render(request, 'rtchat/chat.html', {
         'chat_messages': chat_messages,
         'form': form,
