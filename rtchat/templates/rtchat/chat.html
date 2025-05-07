@@ -21,6 +21,7 @@
                 hx-post="{% url 'home' %}" 
                 hx-target="#chat_messages"
                 hx-swap="beforeend"
+                _="on htmx:afterRequest reset() me"
                 >
                     {% csrf_token %}
                     {{ form }}
