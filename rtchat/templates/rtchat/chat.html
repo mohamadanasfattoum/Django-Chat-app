@@ -31,3 +31,14 @@
     </div>
 </wrapper>
 {% endblock content %}
+
+{% block javascript %}
+    <script>
+        function scrollToBottom() {
+            const chatContainer = document.getElementById('chat_container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        scrollToBottom();
+    </script>
+  
+{% endblock javascript %}
