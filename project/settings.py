@@ -31,6 +31,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -94,8 +95,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "project.wsgi.application"
-
+# WSGI_APPLICATION = "project.wsgi.application"
+ASGI_APPLICATION = "project.asgi.application" # for daphne server, ASDI_APPLICATION for channels
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
