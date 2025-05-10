@@ -18,7 +18,11 @@ class ChatroomConsumer(WebsocketConsumer):
             self.chatroom_name,  # The name of the chatroom group
             self.channel_name  # The channel name for this WebSocket connection
         )
-
+        # add and update online the user in the group
+        if self.user not in self.chatroom.users_online.all():
+            self.chatroom.users_online.add(self.user)
+            self.update_online_count()
+        # Accept the WebSocket connection
         self.accept()  # Accept the WebSocket connection
 
     def disconnect(self, close_code):
@@ -27,6 +31,10 @@ class ChatroomConsumer(WebsocketConsumer):
             self.chatroom_name,  # The name of the chatroom group
             self.channel_name  # The channel name for this WebSocket connection
         )
+        # remove and update online the user in the group
+        if self.user in self.chatroom.users_online.all():
+            self.chatroom.users_online.remove(self.user)
+            self.update_online_count()
 
 
     def receive(self, text_data):
@@ -49,20 +57,35 @@ class ChatroomConsumer(WebsocketConsumer):
         # Send the message to the chatroom group
         async_to_sync(self.channel_layer.group_send)(
             self.chatroom_name, event # The name of the chatroom group
-
         )
+
 
     def message_handler(self, event):
         message_id = event['message_id']
         message = GroupMessages.objects.get(id=message_id)  # Get the message object from the database
         context = {
             'message': message,  # Pass the message object to the template
-            'user': self.user,  # Pass the user object to the template
+            'user': self.user  # Pass the user object to the template
         }
 
         html = render_to_string("rtchat/partials/chat_message_p.html", context=context)
         self.send(text_data=html)
 
+    def update_online_count(self):
+        # Update the online user count in the chatroom
+        online_count = self.chatroom.users_online.count()-1  # Get the count of online users in the chatroom
 
+        event = {
+            'type': 'online_count_handler',  # The type of event to handle
+            'online_count': online_count  # The number of online users
+        }
+        async_to_sync(self.channel_layer.group_send)(self.chatroom_name, event)  # The name of the chatroom group   
+
+    def online_count_handler(self, event):
+        online_count = event['online_count']
+        html = render_to_string("rtchat/partials/online_count.html", {'online_count' : online_count})
+        self.send(text_data=html)
+    
+    
 # Diese Klasse ist der Einstiegspunkt für die Verwaltung von WebSocket-Verbindungen.
 #  Sie kann erweitert werden, um Nachrichten zu senden, zu empfangen und Benutzer zu Gruppen hinzuzufügen.
