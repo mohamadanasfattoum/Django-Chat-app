@@ -27,7 +27,6 @@ urlpatterns = [
     path("", include("rtchat.urls")),
     path("profile/", include("users.urls")),
     path('@<username>/', profile, name='profile'),  
-    path("chat/", include("rtchat.urls")),
 
 ]
 
